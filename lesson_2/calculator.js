@@ -17,6 +17,7 @@ function invalid(num) {
 
 prompt('Welcome to Calculator!');
 
+while (true) {
 prompt('What is your first number?');
 let firstNum = rlSync.question();
 
@@ -58,4 +59,16 @@ function doMath(a, b, op) {
   }
 }
 
+
 doMath(firstNum, secondNum, operation);
+
+prompt('Would you like to perform another operation? (y/n)');
+let answer = rlSync.question();
+
+if (answer.toLowerCase() !== 'y') {
+  prompt('See you next time!')
+  break 
+};
+}
+
+
