@@ -3,6 +3,7 @@
 //Ask the user for an operation to perform
 //Perform the operation on the two numbers.
 //Print the result to the terminal.
+const MESSAGES = require('./calculator_messages.json');
 
 
 const rlSync = require('readline-sync');
@@ -15,21 +16,21 @@ function invalid(num) {
   return num.trimStart() === '' || Number.isNaN(Number(num));
 }
 
-prompt('Welcome to Calculator!');
+prompt(MESSAGES['welcome']);
 
 while (true) {
-prompt('What is your first number?');
+prompt(MESSAGES['firstNum']);
 let firstNum = rlSync.question();
 
 while (invalid(firstNum)) {
-  prompt('This is not a valid number!');
+  prompt(MESSAGES['numNotValid']);
   firstNum = rlSync.question();
 }
 
-prompt('What is your second number?');
+prompt(MESSAGES['secondNum']);
 let secondNum = rlSync.question();
 while (invalid(secondNum)) {
-  prompt('This is not a valid number!');
+  prompt(MESSAGES['numNotValid']);
   secondNum = rlSync.question();
 }
 
@@ -62,11 +63,11 @@ function doMath(a, b, op) {
 
 doMath(firstNum, secondNum, operation);
 
-prompt('Would you like to perform another operation? (y/n)');
+prompt(MESSAGES['runAgain']);
 let answer = rlSync.question();
 
 if (answer.toLowerCase() !== 'y') {
-  prompt('See you next time!')
+  prompt(MESSAGES['bye'])
   break 
 };
 }

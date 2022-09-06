@@ -1,0 +1,9 @@
+{
+  "welcome": "Welcome to Calculator!",
+  "firstNum": "What is your first number?",
+  "secondNum": "What is your second number?",
+  "numNotValid": "This is not a valid number.",
+  "runAgain": "Would you like to  perform another operation? (y/n)",
+  "bye": "See you next time!"
+
+}
