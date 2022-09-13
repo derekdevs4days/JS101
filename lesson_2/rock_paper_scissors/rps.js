@@ -93,9 +93,10 @@ while (true) {
   playerScore = 0;
   comScore = 0;
   turns = 0;
+
   prompt('Do you want to play again? (y/n)');
   let answer = readline.question().toLowerCase();
-
+  console.clear();
   while (answer !== 'y' && answer !== 'n') {
     prompt('Please enter "y" or "n".');
     answer = readline.question().toLowerCase();
