@@ -42,9 +42,11 @@ function scoreCoutner(choice, comChoice) {
   turns++;
 }
 
+prompt(`Let's play rock paper scissors spock lizard! Best out of 5 wins!`);
 while (true) {
 
   while (true) {
+    prompt(`This is round ${turns}.`);
     prompt(`Please choose one: ${VALID_CHOICES.join(', ')}`);
     let choice = readline.question();
     while (!VALID_CHOICES.includes(choice)) {
@@ -60,11 +62,11 @@ while (true) {
 
     scoreCoutner(choice, comChoice);
 
-    prompt(`Current Score\nPlayer:${playerScore} Computer:${comScore}`);
+    prompt(`Current Score => Player: ${playerScore} Computer: ${comScore}`);
 
-    const WIN = `You are the winner! You have ${playerScore} points and the computer has ${comScore} points].`;
-    const LOSE = `You lost. You have ${playerScore} points and the computer has ${comScore} points.`;
-    const TIE = `It's a tie! You have ${playerScore} points and the computer has ${comScore} points.`;
+    const WIN = `The game is over... You are the winner! You have ${playerScore} points and the computer has ${comScore} points.`;
+    const LOSE = `The game is over... You lost. You have ${playerScore} points and the computer has ${comScore} points.`;
+    const TIE = `The game is over... It's a tie! You have ${playerScore} points and the computer has ${comScore} points.`;
 
     if (playerScore > 2) {
       prompt(WIN);
