@@ -2,53 +2,95 @@ const readline = require('readline-sync');
 
 const VALID_CHOICES = ['rock', 'paper', 'scissors', 'spock', 'lizard'];
 
+const WINNING_COMBOS = {
+  rock:     ['scissors', 'lizard'],
+  paper:    ['rock',     'spock'],
+  scissors: ['paper',    'lizard'],
+  lizard:   ['paper',    'spock'],
+  spock:    ['rock',     'scissors'],
+};
+
+let playerScore = 0;
+let comScore = 0;
+let turns = 0;
+
 function prompt(message) {
   console.log(`=> ${message}`);
 }
 
 function diplayWinner(choice, comChoice) {
-
   prompt(`You chose ${choice}, computer chose ${comChoice}`);
 
-  if ((choice === 'rock' && comChoice === 'scissors') ||
- (choice === 'rock' && comChoice === 'lizard') ||
- (choice === 'paper' && comChoice === 'rock') ||
- (choice === 'paper' && comChoice === 'spock') ||
- (choice === 'scissors' && comChoice === 'paper') ||
- (choice === 'scissors' && comChoice === 'lizard') ||
- (choice === 'lizard' && comChoice === 'paper') ||
- (choice === 'lizard' && comChoice === 'spock') ||
- (choice === 'spock' && comChoice === 'rock') ||
- (choice === 'spock' && comChoice === 'scissors')) {
-    prompt('You win!');
-  } else if ((choice === 'rock' && comChoice === 'paper') ||
- (choice === 'rock' && comChoice === 'spock') ||
- (choice === 'paper' && comChoice === 'lizard') ||
- (choice === 'paper' && comChoice === 'scissors') ||
- (choice === 'scissors' && comChoice === 'spock') ||
- (choice === 'scissors' && comChoice === 'rock') ||
- (choice === 'lizard' && comChoice === 'rock') ||
- (choice === 'lizard' && comChoice === 'scissors') ||
- (choice === 'spock' && comChoice === 'paper') ||
- (choice === 'spock' && comChoice === 'lizard')) {
-    prompt('You lose.');
-  } else {
+  if (WINNING_COMBOS[choice].includes(comChoice)) {
+    prompt('You win this round! ');
+  } else if (choice === comChoice) {
     prompt('It\'s a tie.');
+  } else {
+    prompt('You lose this round.');
   }
 }
 
+function scoreCoutner(choice, comChoice) {
+  if (WINNING_COMBOS[choice].includes(comChoice)) {
+    playerScore++;
+  } else if (choice === comChoice) {
+    playerScore += 0;
+    comScore += 0;
+  } else {
+    comScore++;
+  }
+  turns++;
+}
+
 while (true) {
-  prompt(`Please choose one: ${VALID_CHOICES.join(', ')}`);
-  let choice = readline.question();
-  while (!VALID_CHOICES.includes(choice)) {
-    prompt('Enter a valid choice.');
-    choice = readline.question();
+
+  while (true) {
+    prompt(`Please choose one: ${VALID_CHOICES.join(', ')}`);
+    let choice = readline.question();
+    while (!VALID_CHOICES.includes(choice)) {
+      prompt('Enter a valid choice.');
+      choice = readline.question();
+    }
+
+    let randomIndex = Math.floor(Math.random() * 5);
+    let comChoice = VALID_CHOICES[randomIndex];
+
+
+    diplayWinner(choice, comChoice);
+
+    scoreCoutner(choice, comChoice);
+
+    prompt(`Current Score\nPlayer:${playerScore} Computer:${comScore}`);
+
+    const WIN = `You are the winner! You have ${playerScore} points and the computer has ${comScore} points].`;
+    const LOSE = `You lost. You have ${playerScore} points and the computer has ${comScore} points.`;
+    const TIE = `It's a tie! You have ${playerScore} points and the computer has ${comScore} points.`;
+
+    if (playerScore > 2) {
+      prompt(WIN);
+      break;
+    }
+
+    if (comScore > 2) {
+      prompt(LOSE);
+      break;
+    }
+
+    if (turns === 5 && playerScore === comScore) {
+      prompt(TIE);
+      break;
+    } else if (turns === 5 && playerScore > comScore) {
+      prompt(WIN);
+      break;
+    } else if (turns === 5 && playerScore < comScore) {
+      prompt(LOSE);
+      break;
+    }
   }
 
-  let randomIndex = Math.floor(Math.random() * 5);
-  let comChoice = VALID_CHOICES[randomIndex];
-
-  diplayWinner(choice, comChoice);
+  playerScore = 0;
+  comScore = 0;
+  turns = 0;
   prompt('Do you want to play again? (y/n)');
   let answer = readline.question().toLowerCase();
 
