@@ -7,9 +7,15 @@ function prompt(message) {
 function match(n1, n2, n3, n4, n5, last) {
   let array = [n1, n2, n3, n4 ,n5];
   if (array.includes(last)) {
+<<<<<<< HEAD
     prompt(`The number ${last} appears in ${array.join(' ')}`);
   } else {
     prompt(`The number ${last} does not appears in ${array.join(' ')}`);
+=======
+    prompt(`The number ${last} appears in ${array.join('')}`);
+  } else {
+    prompt(`The number ${last} does not appears in ${array.join('')}`);
+>>>>>>> origin/main
   }
 }
 
