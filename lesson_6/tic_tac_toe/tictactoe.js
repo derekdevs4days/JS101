@@ -24,6 +24,7 @@ function prompt(message) {
 
 function displayBoard() {
   console.clear();
+  prompt(`You are ${PLAYER_MARKER}. Computer is ${COMP_MARKER}.`);
   console.log('');
   console.log('     |     |');
   console.log(`  ${board['1']}  |  ${board['2']}  |  ${board['3']}`);
@@ -52,12 +53,26 @@ function emptySq(board) {
   return Object.keys(board).filter(key => board[key] === INITIAL_MARKER);
 }
 
+function joinOr(arr, symbol = ',', word = 'or') {
+  const insertHere = arr.length - 1;
+  switch (arr.length) {
+    case 0:
+      return '';
+    case 1:
+      return arr[0];
+    case 2:
+      return arr.join(` ${word} `);
+    default:
+      arr[insertHere] = `${word} ${arr[insertHere]}`;
+      return arr.join(`${symbol} `);
+  }
+}
+
 function playerChoosesSquare(board) {
   let square;
 
-
   while (true ) {
-    prompt(`Choose a square (${emptySq(board).join(', ')}) `);
+    prompt(`Choose a square ${joinOr(emptySq(board))}`);
     square = readline.question().trim();
 
     if (emptySq(board).includes(square)) break;
@@ -111,23 +126,34 @@ function detectWinner(board) {
   return null;
 }
 
-
 while (true) {
-  displayBoard(board);
 
-  playerChoosesSquare(board);
-  compChooseSquare(board);
+  board = initilizeBoard();
+  while (true) {
+    displayBoard(board);
 
-  displayBoard(board);
+    playerChoosesSquare(board);
+    compChooseSquare(board);
 
-  if (someoneWon(board)) {
-    prompt(`${detectWinner(board)} Won!`);
-    break;
+    if (boardFull(board)) {
+      prompt("It's a tie");
+      break;
+    }
+    displayBoard(board);
+    if (someoneWon(board)) {
+      prompt(`${detectWinner(board)} Won!`);
+      break;
+    }
   }
-  if (boardFull(board)) {
-    prompt("It's a tie");
+
+  prompt('Do you want to play again? (y / n)' );
+  let playAgain = readline.question();
+  while (playAgain !== 'y' && playAgain !== 'n') {
+    prompt('Please enter y or n.');
+    playAgain = readline.question();
+  }
+  if (playAgain !== 'y') {
+    prompt("Thanks for playing. Goodbye!");
     break;
   }
 }
-
-
