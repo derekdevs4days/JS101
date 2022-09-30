@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /*
 1. Display the initial empty 3x3 board.
 2. Ask the user to mark a square.
@@ -16,15 +17,27 @@ const INITIAL_MARKER = ' ';
 const PLAYER_MARKER = 'X';
 const COMP_MARKER = 'O';
 
+let playerScore = 0;
+let compScore = 0;
+let numberOfGames = 1;
+let roundWinner = "";
+
 let board = initilizeBoard();
 
 function prompt(message) {
   console.log(`=> ${message}`);
 }
 
+// eslint-disable-next-line max-lines-per-function
+// eslint-disable-next-line max-statements
 function displayBoard() {
   console.clear();
+  prompt(`Let's play tic tac toe! Best out of 5 wins.`);
   prompt(`You are ${PLAYER_MARKER}. Computer is ${COMP_MARKER}.`);
+  prompt(`This is round ${numberOfGames}.`);
+  prompt(`Player Score: ${playerScore}. Computer score: ${compScore}.`);
+  prompt(roundWinner);
+
   console.log('');
   console.log('     |     |');
   console.log(`  ${board['1']}  |  ${board['2']}  |  ${board['3']}`);
@@ -113,12 +126,14 @@ function detectWinner(board) {
       board[sq2] === PLAYER_MARKER &&
        board[sq3] === PLAYER_MARKER
     ) {
+      playerScore += 1;
       return 'Player';
     } else if (
       board[sq1] === COMP_MARKER &&
       board[sq2] === COMP_MARKER &&
       board[sq3] === COMP_MARKER
     ) {
+      compScore += 1;
       return 'Computer';
     }
   }
@@ -128,20 +143,48 @@ function detectWinner(board) {
 
 while (true) {
 
-  board = initilizeBoard();
   while (true) {
-    displayBoard(board);
+    prompt(`This is round ${numberOfGames}.`);
+    prompt(`Player Score: ${playerScore}. Computer score: ${compScore}.`);
+    board = initilizeBoard();
 
-    playerChoosesSquare(board);
-    compChooseSquare(board);
+    while (true) {
+      displayBoard(board);
 
-    if (boardFull(board)) {
-      prompt("It's a tie");
+      playerChoosesSquare(board);
+      displayBoard(board);
+      if (someoneWon(board)) {
+        roundWinner = 'Player won this round.';
+        numberOfGames += 1;
+        break;
+      }
+
+      compChooseSquare(board);
+      displayBoard(board);
+      if (someoneWon(board)) {
+        roundWinner = 'Computer won this round.';
+        numberOfGames += 1;
+        break;
+      }
+
+      if (boardFull(board)) {
+        roundWinner = `It's a tie.`;
+        numberOfGames++;
+        break;
+      }
+    }
+    if (playerScore >= 3) {
+      prompt('You won the game!');
       break;
     }
-    displayBoard(board);
-    if (someoneWon(board)) {
-      prompt(`${detectWinner(board)} Won!`);
+
+    if (compScore >= 3) {
+      prompt('Computer won, better luck next time.');
+      break;
+    }
+
+    if (numberOfGames > 6) {
+      prompt(`It's a tie.`);
       break;
     }
   }
@@ -156,4 +199,6 @@ while (true) {
     prompt("Thanks for playing. Goodbye!");
     break;
   }
+
+
 }
