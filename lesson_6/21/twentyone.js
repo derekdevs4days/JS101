@@ -19,17 +19,38 @@ function prompt(message) {
 
 function readCard(obj) {
   let currentHand = "";
-  if (obj.hasOwnProperty('dealer')) {
-    let len = obj.cards.length;
-    if (len === 2) {
-      currentHand += `${obj.cards[0][0]}${obj.cards[0][3]} and unknown card`;
-    }
-    return currentHand;
+  let len = obj.cards.length;
+  if (obj.hasOwnProperty('dealer') && len === 2) {
+   currentHand += `${obj.cards[0][0]}${obj.cards[0][3]} and unknown card`;
+   return currentHand;
   }
+
   for (let card of obj.cards) {
     currentHand += `${card[0]}${card[3]} `;
   }
   return currentHand;
+}
+
+function currentTotal(obj) {
+  let arr = obj.cards;
+  let sum = arr.reduce((a,c) => a + c[2], 0);
+
+  arr.forEach(card => {
+    if (card[0] === 'A' && sum > 21) {
+     sum -= 10
+    }
+  })
+  return sum
+}
+
+function hit(obj) {
+  let len = deck.length;
+  console.log(len)
+  let randomIdx = Math.floor(Math.random() * len);
+  console.log(randomIdx)
+
+  obj.cards.push(deck[randomIdx]);
+  deck.splice(randomIdx, 1);
 }
 
 function initilizedDeck() {
@@ -46,7 +67,7 @@ function initilizedDeck() {
     ['J', 'S', 10, '♠'], ['J', 'C',10, '♣'], ['J', 'D', 10, '♦'], ['J', 'H', 10, '♥'],
     ['Q', 'S', 10, '♠'], ['Q', 'C', 10, '♣'], ['Q', 'D', 10, '♦'], ['Q', 'H', 10, '♥'],
     ['K', 'S', 10, '♠'], ['K', 'C', 10, '♣'], ['K', 'D', 10, '♦'], ['K', 'H', 10, '♥'],
-    ['A', 'S', [1, 11], '♠'], ['A', 'C', [1, 11], '♣'], ['A', 'D', [1, 11], '♦'], ['A', 'H', [1, 11], '♥']
+    ['A', 'S', 11, '♠'], ['A', 'C', 11, '♣'], ['A', 'D', 11, '♦'], ['A', 'H', 11, '♥']
   ];
   return deck;
 }
@@ -56,17 +77,15 @@ function initialDeal() {
   let counter = 4;
 
   while (counter > 0) {
-    let randomIdx = Math.floor(Math.random() * 52);
-    while (deck[randomIdx] === '') {
-      randomIdx = Math.floor(Math.random() * 52);
-    }
+    let len = deck.length;
+    let randomIdx = Math.floor(Math.random() * len);
 
     if (counter % 2 === 0) {
       dealerHand.cards.push(deck[randomIdx]);
     } else {
       playerHand.cards.push(deck[randomIdx]);
     }
-    deck.splice(randomIdx, 1, '');
+    deck.splice(randomIdx, 1);
     counter--;
   }
 }
@@ -75,3 +94,21 @@ initialDeal();
 
 prompt(`Dealer have: ${readCard(dealerHand)}`);
 prompt(`You have: ${readCard(playerHand)}`);
+
+while (true) {
+  // console.clear();
+  prompt(`Dealer has: ${readCard(dealerHand)}`);
+  prompt(`You have: ${readCard(playerHand)}`);
+
+  prompt(`You are at ${currentTotal(playerHand)}. Do you want to (hit) or (stay)?`);
+  let hitStay = readline.question();
+
+  while (hitStay !== 'hit' && hitStay !== 'stay') {
+    prompt('Do you want to hit or stay?');
+    hitStay = readline.question();
+  }
+  
+  if (hitStay === 'stay') break;
+  
+  hit(playerHand);
+}
