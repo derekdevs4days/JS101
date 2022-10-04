@@ -1,6 +1,6 @@
 const readline = require('readline-sync');
 
-let deck = initilizedDeck();
+let deck = initilizeDeck();
 
 let dealerHand = {
   cards: [],
@@ -17,14 +17,13 @@ function prompt(message) {
   console.log(`=> ${message}`);
 }
 
+function showDealersHand(obj) {
+  let currentHand = `${obj.cards[0][0]}${obj.cards[0][3]} and unknown card`;
+  return currentHand;
+}
+
 function readCard(obj) {
   let currentHand = "";
-  let len = obj.cards.length;
-  if (obj.hasOwnProperty('dealer') && len === 2) {
-   currentHand += `${obj.cards[0][0]}${obj.cards[0][3]} and unknown card`;
-   return currentHand;
-  }
-
   for (let card of obj.cards) {
     currentHand += `${card[0]}${card[3]} `;
   }
@@ -45,15 +44,13 @@ function currentTotal(obj) {
 
 function hit(obj) {
   let len = deck.length;
-  console.log(len)
   let randomIdx = Math.floor(Math.random() * len);
-  console.log(randomIdx)
 
   obj.cards.push(deck[randomIdx]);
   deck.splice(randomIdx, 1);
 }
 
-function initilizedDeck() {
+function initilizeDeck() {
   let deck = [
     ['2', 'S', 2, '♠'], ['2', 'C', 2, '♣'], ['2', 'D', 2, '♦'], ['2', 'H', 2, '♥'],
     ['3', 'S', 3, '♠'], ['3', 'C', 3, '♣'], ['3', 'D', 3, '♦'], ['3', 'H', 3, '♥'],
@@ -90,25 +87,79 @@ function initialDeal() {
   }
 }
 
-initialDeal();
-
-prompt(`Dealer have: ${readCard(dealerHand)}`);
-prompt(`You have: ${readCard(playerHand)}`);
-
-while (true) {
-  // console.clear();
+function determineWinner(num1, num2) {
+  if (num1 > 21) return prompt(`Bust! You are at ${currentTotal(playerHand)}.`);
+  if (num2 > 21) return prompt('You Win! Dealer bust.');
+  
   prompt(`Dealer has: ${readCard(dealerHand)}`);
-  prompt(`You have: ${readCard(playerHand)}`);
 
-  prompt(`You are at ${currentTotal(playerHand)}. Do you want to (hit) or (stay)?`);
-  let hitStay = readline.question();
-
-  while (hitStay !== 'hit' && hitStay !== 'stay') {
-    prompt('Do you want to hit or stay?');
-    hitStay = readline.question();
+  if (num1 > num2) {
+    return prompt(`You Win! You have ${num1} and dealer has ${num2}.`);
+  } else {
+    return prompt(`You Lose. You have ${num1} and dealer has ${num2}.`);
   }
-  
-  if (hitStay === 'stay') break;
-  
-  hit(playerHand);
 }
+
+
+//main loop
+while (true) {
+  console.clear() 
+  deck = initilizeDeck();
+  dealerHand = {
+    cards: [],
+    sum: 0,
+    dealer: 1
+  };
+  playerHand = {
+    cards: [],
+    sum: 0
+  };
+  initialDeal();
+
+  //player loop
+  while (true) {
+    console.clear();
+    
+    prompt(`Dealer's Hand: ${showDealersHand(dealerHand)}`);
+    prompt(`Your Hand: ${readCard(playerHand)}`);
+  
+    if (currentTotal(playerHand) > 21) {
+      break;
+    }
+  
+    prompt(`You are at ${currentTotal(playerHand)}. Do you want to (hit) or (stay)?`);
+    let hitStay = readline.question();
+  
+    while (hitStay !== 'hit' && hitStay !== 'stay') {
+      prompt('Do you want to hit or stay?');
+      hitStay = readline.question();
+    }
+    
+  
+    if (hitStay === 'stay') {
+      prompt('You choose to stay.');
+      break;
+    }
+    
+    hit(playerHand);
+  }
+  //dealer loop
+  while (true) {
+    if (currentTotal(playerHand) > 21 || currentTotal(dealerHand) >= 17 ) break;
+    hit(dealerHand);
+  }
+
+  determineWinner(currentTotal(playerHand), currentTotal(dealerHand));
+
+  prompt(`Do you want to play another hand? (y / n)?`);
+  let playAgain = readline.question().toLowerCase();
+  while (playAgain !== 'y' && playAgain !== 'n') {
+    prompt(`Please enter (y) or (n)`);
+    playAgain = readline.question().toLowerCase();
+  }
+  if (playAgain === 'n') break;
+}
+/*
+TODO
+add score counter
+*/
