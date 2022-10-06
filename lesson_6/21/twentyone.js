@@ -1,6 +1,14 @@
 const readline = require('readline-sync');
+const DEALER_MIN = 17;
+const MAX_VALUE = 21;
+
+let currentRound = 1;
+let playerScore = 0;
+let dealerScore = 0;
+
 
 let deck = initilizeDeck();
+
 
 let dealerHand = {
   cards: [],
@@ -10,11 +18,47 @@ let dealerHand = {
 
 let playerHand = {
   cards: [],
-  sum: 0
+  sum: 0,
 };
 
 function prompt(message) {
   console.log(`=> ${message}`);
+}
+
+function initilizeDeck() {
+  let deck = [
+    ['2', 'S', 2, '♠'], ['2', 'C', 2, '♣'], ['2', 'D', 2, '♦'], ['2', 'H', 2, '♥'],
+    ['3', 'S', 3, '♠'], ['3', 'C', 3, '♣'], ['3', 'D', 3, '♦'], ['3', 'H', 3, '♥'],
+    ['4', 'S', 4, '♠'], ['4', 'C', 4, '♣'], ['4', 'D', 4, '♦'], ['4', 'H', 4, '♥'],
+    ['5', 'S', 5, '♠'], ['5', 'C', 5, '♣'], ['5', 'D', 5, '♦'], ['5', 'H', 5, '♥'],
+    ['6', 'S', 6, '♠'], ['6', 'C', 6, '♣'], ['6', 'D', 6, '♦'], ['6', 'H', 6, '♥'],
+    ['7', 'S', 7, '♠'], ['7', 'C', 7, '♣'], ['7', 'D', 7, '♦'], ['7', 'H', 7, '♥'],
+    ['8', 'S', 8, '♠'], ['8', 'C', 8, '♣'], ['8', 'D', 8, '♦'], ['8', 'H', 8, '♥'],
+    ['9', 'S', 9, '♠'], ['9', 'C', 9, '♣'], ['9', 'D', 9, '♦'], ['9', 'H', 9, '♥'],
+    ['10', 'S', 10, '♠'], ['10', 'C', 10, '♣'], ['10', 'D', 10, '♦'], ['10', 'H', 10, '♥'],
+    ['J', 'S', 10, '♠'], ['J', 'C',10, '♣'], ['J', 'D', 10, '♦'], ['J', 'H', 10, '♥'],
+    ['Q', 'S', 10, '♠'], ['Q', 'C', 10, '♣'], ['Q', 'D', 10, '♦'], ['Q', 'H', 10, '♥'],
+    ['K', 'S', 10, '♠'], ['K', 'C', 10, '♣'], ['K', 'D', 10, '♦'], ['K', 'H', 10, '♥'],
+    ['A', 'S', 11, '♠'], ['A', 'C', 11, '♣'], ['A', 'D', 11, '♦'], ['A', 'H', 11, '♥']
+  ];
+  return deck;
+}
+
+function initialDeal() {
+  let counter = 4;
+
+  while (counter > 0) {
+    let len = deck.length;
+    let randomIdx = Math.floor(Math.random() * len);
+
+    if (counter % 2 === 0) {
+      dealerHand.cards.push(deck[randomIdx]);
+    } else {
+      playerHand.cards.push(deck[randomIdx]);
+    }
+    deck.splice(randomIdx, 1);
+    counter--;
+  }
 }
 
 function showDealersHand(obj) {
@@ -50,60 +94,52 @@ function hit(obj) {
   deck.splice(randomIdx, 1);
 }
 
-function initilizeDeck() {
-  let deck = [
-    ['2', 'S', 2, '♠'], ['2', 'C', 2, '♣'], ['2', 'D', 2, '♦'], ['2', 'H', 2, '♥'],
-    ['3', 'S', 3, '♠'], ['3', 'C', 3, '♣'], ['3', 'D', 3, '♦'], ['3', 'H', 3, '♥'],
-    ['4', 'S', 4, '♠'], ['4', 'C', 4, '♣'], ['4', 'D', 4, '♦'], ['4', 'H', 4, '♥'],
-    ['5', 'S', 5, '♠'], ['5', 'C', 5, '♣'], ['5', 'D', 5, '♦'], ['5', 'H', 5, '♥'],
-    ['6', 'S', 6, '♠'], ['6', 'C', 6, '♣'], ['6', 'D', 6, '♦'], ['6', 'H', 6, '♥'],
-    ['7', 'S', 7, '♠'], ['7', 'C', 7, '♣'], ['7', 'D', 7, '♦'], ['7', 'H', 7, '♥'],
-    ['8', 'S', 8, '♠'], ['8', 'C', 8, '♣'], ['8', 'D', 8, '♦'], ['8', 'H', 8, '♥'],
-    ['9', 'S', 9, '♠'], ['9', 'C', 9, '♣'], ['9', 'D', 9, '♦'], ['9', 'H', 9, '♥'],
-    ['10', 'S', 10, '♠'], ['10', 'C', 10, '♣'], ['10', 'D', 10, '♦'], ['10', 'H', 10, '♥'],
-    ['J', 'S', 10, '♠'], ['J', 'C',10, '♣'], ['J', 'D', 10, '♦'], ['J', 'H', 10, '♥'],
-    ['Q', 'S', 10, '♠'], ['Q', 'C', 10, '♣'], ['Q', 'D', 10, '♦'], ['Q', 'H', 10, '♥'],
-    ['K', 'S', 10, '♠'], ['K', 'C', 10, '♣'], ['K', 'D', 10, '♦'], ['K', 'H', 10, '♥'],
-    ['A', 'S', 11, '♠'], ['A', 'C', 11, '♣'], ['A', 'D', 11, '♦'], ['A', 'H', 11, '♥']
-  ];
-  return deck;
-}
-
-
-function initialDeal() {
-  let counter = 4;
-
-  while (counter > 0) {
-    let len = deck.length;
-    let randomIdx = Math.floor(Math.random() * len);
-
-    if (counter % 2 === 0) {
-      dealerHand.cards.push(deck[randomIdx]);
-    } else {
-      playerHand.cards.push(deck[randomIdx]);
-    }
-    deck.splice(randomIdx, 1);
-    counter--;
-  }
-}
 
 function determineWinner(num1, num2) {
-  if (num1 > 21) return prompt(`Bust! You are at ${currentTotal(playerHand)}.`);
-  if (num2 > 21) return prompt('You Win! Dealer bust.');
+  let hands = `You have ${num1} and dealer has ${num2}.`
+  let message;
   
-  prompt(`Dealer has: ${readCard(dealerHand)}`);
+  if (num1 > MAX_VALUE) {
+    dealerScore ++;
+    message = `Bust! You lose this hand. You are at ${currentTotal(playerHand)}.`;
+    return message;
+  } 
 
+  if (num2 > MAX_VALUE) {
+    playerScore ++
+    message = 'You win this hand! Dealer bust.';
+    return message;
+  }
+  
   if (num1 > num2) {
-    return prompt(`You Win! You have ${num1} and dealer has ${num2}.`);
+    playerScore ++;
+    message = `You win this hand! ${hands}`;
+    return message;
+  } else if (num1 < num2) {
+     dealerScore ++;
+     message = `You Lose this hand. ${hands}`;
+     return message;
   } else {
-    return prompt(`You Lose. You have ${num1} and dealer has ${num2}.`);
+    message = `This hand is a tie. ${hands}`;
+    return message;
   }
 }
 
+function fakeShuffle() {
+  let i = 0;
+  prompt(`\nShuffling... Next hand starts in 10 seconds.`);
+  while (i < 5000000000) {
+    i++;
+  }
+}
 
+//play again loop
+while (true) {
+   currentRound = 1;
+   playerScore = 0;
+   dealerScore = 0;
 //main loop
 while (true) {
-  console.clear() 
   deck = initilizeDeck();
   dealerHand = {
     cards: [],
@@ -112,14 +148,15 @@ while (true) {
   };
   playerHand = {
     cards: [],
-    sum: 0
+    sum: 0,
   };
   initialDeal();
 
   //player loop
   while (true) {
     console.clear();
-    
+    prompt(`This is round ${currentRound}`);
+    prompt(`You have ${playerScore} points. Dealer has ${dealerScore} points.\n`)
     prompt(`Dealer's Hand: ${showDealersHand(dealerHand)}`);
     prompt(`Your Hand: ${readCard(playerHand)}`);
   
@@ -145,13 +182,37 @@ while (true) {
   }
   //dealer loop
   while (true) {
-    if (currentTotal(playerHand) > 21 || currentTotal(dealerHand) >= 17 ) break;
+    if (currentTotal(playerHand) > MAX_VALUE || currentTotal(dealerHand) >= DEALER_MIN ) break;
     hit(dealerHand);
   }
+  currentRound += 1;
+  let message = determineWinner(currentTotal(playerHand), currentTotal(dealerHand));
+  console.clear();
+  prompt(`This is round ${currentRound}`);
+  prompt(`You have ${playerScore} points. Dealer has ${dealerScore} points.\n`)
+  prompt(`Dealer Hands: ${readCard(dealerHand)}`);
+  prompt(`Your Hand: ${readCard(playerHand)}`);
+  prompt(message);
+  fakeShuffle();
 
-  determineWinner(currentTotal(playerHand), currentTotal(dealerHand));
+  if (playerScore > 3) {
+    prompt (`You win this game!`);
+    break;
+  }
 
-  prompt(`Do you want to play another hand? (y / n)?`);
+  if (dealerScore > 3) {
+    prompt (`You lost the game.`);
+    break;
+  }
+
+  if (currentRound > 6) {
+    prompt(`This game is a tie.`);
+    break;
+  }
+
+}
+
+  prompt(`Do you want to play another round? (y / n)?`);
   let playAgain = readline.question().toLowerCase();
   while (playAgain !== 'y' && playAgain !== 'n') {
     prompt(`Please enter (y) or (n)`);
@@ -159,7 +220,3 @@ while (true) {
   }
   if (playAgain === 'n') break;
 }
-/*
-TODO
-add score counter
-*/
