@@ -126,11 +126,14 @@ function determineWinner(num1, num2) {
 }
 
 function fakeShuffle() {
-  let i = 0;
-  prompt(`\nShuffling... Next hand starts in 10 seconds.`);
-  while (i < 5000000000) {
-    i++;
+  const start = Date.now();
+  let now = Date.now();
+  prompt('');
+  prompt(`Shuffling... Next hand starts in 10 seconds.`);
+  while (now - start < 10000) {
+    now = Date.now();
   }
+  return;
 }
 
 //play again loop
@@ -156,7 +159,7 @@ while (true) {
   while (true) {
     console.clear();
     prompt(`This is round ${currentRound}`);
-    prompt(`You have ${playerScore} points. Dealer has ${dealerScore} points.\n`)
+    prompt(`You have ${dealerScore} points. Dealer has ${playerScore} points.\n`)
     prompt(`Dealer's Hand: ${showDealersHand(dealerHand)}`);
     prompt(`Your Hand: ${readCard(playerHand)}`);
   
@@ -189,27 +192,26 @@ while (true) {
   let message = determineWinner(currentTotal(playerHand), currentTotal(dealerHand));
   console.clear();
   prompt(`This is round ${currentRound}`);
-  prompt(`You have ${playerScore} points. Dealer has ${dealerScore} points.\n`)
+  prompt(`Dealer Score: ${playerScore}. Player Score: ${dealerScore}.\n`)
   prompt(`Dealer Hands: ${readCard(dealerHand)}`);
   prompt(`Your Hand: ${readCard(playerHand)}`);
   prompt(message);
-  fakeShuffle();
 
-  if (playerScore > 3) {
+  if (playerScore >= 3) {
     prompt (`You win this game!`);
     break;
   }
 
-  if (dealerScore > 3) {
+  if (dealerScore >= 3) {
     prompt (`You lost the game.`);
     break;
   }
 
-  if (currentRound > 6) {
+  if (currentRound > 5) {
     prompt(`This game is a tie.`);
     break;
   }
-
+  fakeShuffle();
 }
 
   prompt(`Do you want to play another round? (y / n)?`);
@@ -220,3 +222,8 @@ while (true) {
   }
   if (playAgain === 'n') break;
 }
+
+/*
+TODO
+Implement time dealay
+*/
