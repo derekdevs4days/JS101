@@ -76,14 +76,14 @@ function readCard(obj) {
 
 function currentTotal(obj) {
   let arr = obj.cards;
-  let sum = arr.reduce((a,c) => a + c[2], 0);
+  let sum = arr.reduce((a,current) => a + current[2], 0);
 
   arr.forEach(card => {
     if (card[0] === 'A' && sum > 21) {
-     sum -= 10
+      sum -= 10;
     }
-  })
-  return sum
+  });
+  return sum;
 }
 
 function hit(obj) {
@@ -96,29 +96,29 @@ function hit(obj) {
 
 
 function determineWinner(num1, num2) {
-  let hands = `You have ${num1} and dealer has ${num2}.`
+  let hands = `You have ${num1} and dealer has ${num2}.`;
   let message;
-  
+
   if (num1 > MAX_VALUE) {
-    dealerScore ++;
+    dealerScore++;
     message = `Bust! You lose this hand. You are at ${currentTotal(playerHand)}.`;
     return message;
-  } 
+  }
 
   if (num2 > MAX_VALUE) {
-    playerScore ++
+    playerScore++;
     message = 'You win this hand! Dealer bust.';
     return message;
   }
-  
+
   if (num1 > num2) {
-    playerScore ++;
+    playerScore++;
     message = `You win this hand! ${hands}`;
     return message;
   } else if (num1 < num2) {
-     dealerScore ++;
-     message = `You Lose this hand. ${hands}`;
-     return message;
+    dealerScore++;
+    message = `You Lose this hand. ${hands}`;
+    return message;
   } else {
     message = `This hand is a tie. ${hands}`;
     return message;
@@ -133,86 +133,86 @@ function fakeShuffle() {
   while (now - start < 10000) {
     now = Date.now();
   }
-  return;
+
 }
 
 //play again loop
 while (true) {
-   currentRound = 1;
-   playerScore = 0;
-   dealerScore = 0;
-//main loop
-while (true) {
-  deck = initilizeDeck();
-  dealerHand = {
-    cards: [],
-    sum: 0,
-    dealer: 1
-  };
-  playerHand = {
-    cards: [],
-    sum: 0,
-  };
-  initialDeal();
-
-  //player loop
+  currentRound = 1;
+  playerScore = 0;
+  dealerScore = 0;
+  //main loop
   while (true) {
+    deck = initilizeDeck();
+    dealerHand = {
+      cards: [],
+      sum: 0,
+      dealer: 1
+    };
+    playerHand = {
+      cards: [],
+      sum: 0,
+    };
+    initialDeal();
+
+    //player loop
+    while (true) {
+      console.clear();
+      prompt(`This is round ${currentRound}`);
+      prompt(`You have ${dealerScore} points. Dealer has ${playerScore} points.\n`);
+      prompt(`Dealer's Hand: ${showDealersHand(dealerHand)}`);
+      prompt(`Your Hand: ${readCard(playerHand)}`);
+
+      if (currentTotal(playerHand) > 21) {
+        break;
+      }
+
+      prompt(`You are at ${currentTotal(playerHand)}. Do you want to (hit) or (stay)?`);
+      let hitStay = readline.question();
+
+      while (hitStay !== 'hit' && hitStay !== 'stay') {
+        prompt('Do you want to hit or stay?');
+        hitStay = readline.question();
+      }
+
+
+      if (hitStay === 'stay') {
+        prompt('You choose to stay.');
+        break;
+      }
+
+      hit(playerHand);
+    }
+    //dealer loop
+    while (true) {
+      if (currentTotal(playerHand) > MAX_VALUE || currentTotal(dealerHand) >= DEALER_MIN ) break;
+      hit(dealerHand);
+    }
+    currentRound += 1;
+    let message = determineWinner(currentTotal(playerHand), currentTotal(dealerHand));
     console.clear();
     prompt(`This is round ${currentRound}`);
-    prompt(`You have ${dealerScore} points. Dealer has ${playerScore} points.\n`)
-    prompt(`Dealer's Hand: ${showDealersHand(dealerHand)}`);
+    prompt(`Dealer Score: ${playerScore}. Player Score: ${dealerScore}.\n`);
+    prompt(`Dealer Hands: ${readCard(dealerHand)}`);
     prompt(`Your Hand: ${readCard(playerHand)}`);
-  
-    if (currentTotal(playerHand) > 21) {
+    prompt(message);
+
+    if (playerScore >= 3) {
+      prompt (`You win this game!`);
       break;
     }
-  
-    prompt(`You are at ${currentTotal(playerHand)}. Do you want to (hit) or (stay)?`);
-    let hitStay = readline.question();
-  
-    while (hitStay !== 'hit' && hitStay !== 'stay') {
-      prompt('Do you want to hit or stay?');
-      hitStay = readline.question();
-    }
-    
-  
-    if (hitStay === 'stay') {
-      prompt('You choose to stay.');
+
+    if (dealerScore >= 3) {
+      prompt (`You lost the game.`);
       break;
     }
-    
-    hit(playerHand);
-  }
-  //dealer loop
-  while (true) {
-    if (currentTotal(playerHand) > MAX_VALUE || currentTotal(dealerHand) >= DEALER_MIN ) break;
-    hit(dealerHand);
-  }
-  currentRound += 1;
-  let message = determineWinner(currentTotal(playerHand), currentTotal(dealerHand));
-  console.clear();
-  prompt(`This is round ${currentRound}`);
-  prompt(`Dealer Score: ${playerScore}. Player Score: ${dealerScore}.\n`)
-  prompt(`Dealer Hands: ${readCard(dealerHand)}`);
-  prompt(`Your Hand: ${readCard(playerHand)}`);
-  prompt(message);
 
-  if (playerScore >= 3) {
-    prompt (`You win this game!`);
-    break;
+    if (currentRound > 5) {
+      prompt(`This game is a tie.`);
+      break;
+    }
+    fakeShuffle();
   }
-
-  if (dealerScore >= 3) {
-    prompt (`You lost the game.`);
-    break;
-  }
-
-  if (currentRound > 5) {
-    prompt(`This game is a tie.`);
-    break;
-  }
-  fakeShuffle();
-}
 
   prompt(`Do you want to play another round? (y / n)?`);
   let playAgain = readline.question().toLowerCase();
