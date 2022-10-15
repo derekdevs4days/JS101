@@ -133,7 +133,6 @@ function fakeShuffle() {
   while (now - start < 10000) {
     now = Date.now();
   }
-
 }
 
 //play again loop
@@ -159,7 +158,7 @@ while (true) {
     while (true) {
       console.clear();
       prompt(`This is round ${currentRound}`);
-      prompt(`You have ${dealerScore} points. Dealer has ${playerScore} points.\n`);
+      prompt(`You have ${playerScore} points. Dealer has ${dealerScore} points.\n`);
       prompt(`Dealer's Hand: ${showDealersHand(dealerHand)}`);
       prompt(`Your Hand: ${readCard(playerHand)}`);
 
@@ -192,7 +191,7 @@ while (true) {
     let message = determineWinner(currentTotal(playerHand), currentTotal(dealerHand));
     console.clear();
     prompt(`This is round ${currentRound}`);
-    prompt(`Dealer Score: ${playerScore}. Player Score: ${dealerScore}.\n`);
+    prompt(`Player Score: ${playerScore}. Dealer Score: ${dealerScore}.\n`);
     prompt(`Dealer Hands: ${readCard(dealerHand)}`);
     prompt(`Your Hand: ${readCard(playerHand)}`);
     prompt(message);
