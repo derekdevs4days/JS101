@@ -10,21 +10,12 @@ merge([], [1, 4, 5]);             // [1, 4, 5]
 merge([1, 4, 5], []);             // [1, 4, 5]
 
  */
-function merge(arr1, arr2) {
+function merge(a, b) {
   let result = [];
-  let reference = [...arr1, ...arr2];
-  let num = 0;
-
-  while (reference.length > 0) {
-    let index = reference.indexOf(num);
-    if (index !== -1) {
-      result.push(num);
-      reference.splice(index,1);
-    } else {
-      num++;
-    }
+  while (a.length && b.length) {
+    a[0] < b[0]? result.push(a.shift()) : result.push(b.shift());
   }
-  return result;
+  return result.concat(a).concat(b);
 }
 
 console.log(merge([1, 5, 9], [2, 6, 8]));
