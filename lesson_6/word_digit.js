@@ -24,8 +24,10 @@ function wordToDigit(sentence) {
 
   return sentence.map(el => {
     let index = numberKey.indexOf(el.endsWith('.') ? el.slice(0, el.length - 1) : el);
+   
     return index > -1 ? index : el;
   }).join(' ');
 }
 
+console.log(wordToDigit(('Please call me at five five five one two three four. Thanks.')));
 console.log(wordToDigit(('Please call me at five five five one two three four. Thanks.')));
