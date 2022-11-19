@@ -8,4 +8,4 @@ function sumOfSums(arr) {
   return sum;
 }
 
-console.log(sumOfSums([1,2,3,4,5]) === 35);
+console.log(sumOfSums([1,2,3,4,5])); // 35

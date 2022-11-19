@@ -25,6 +25,9 @@ function removeVowels(arr) {
   });
   return noVowels;
 }
+[1, 2, 3].map(n => n * 2);
+[1, 2, 3].map(n => n *= 2);
+
 console.log(removeVowels(['abcdefghijklmnopqrstuvwxyz']));
 console.log(removeVowels(['green', 'YELLOW', 'black', 'white']));
 console.log(removeVowels(['ABC', 'AEIOU', 'XYZ']));
